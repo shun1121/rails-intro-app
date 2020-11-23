@@ -1,0 +1,19 @@
+<!--<p id="notice"><%= notice %></p>-->
+
+<p>
+  <strong>Name:</strong>
+  <%= @intro.name %>
+</p>
+
+<p>
+  <strong>Hometown:</strong>
+  <%= @intro.hometown %>
+</p>
+
+<p>
+  <strong>Content:</strong>
+  <%= @intro.content %>
+</p>
+
+<%= link_to 'Edit', edit_intro_path(@intro) %> |
+<%= link_to 'Back', intros_path %>

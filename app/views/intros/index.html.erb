@@ -1,0 +1,16 @@
+<!--<p id="notice"><%= notice %></p>-->
+<h1>掲示板</h1><br>
+    <% @intros.each do |intro| %>
+      <div>
+        <h3><%= intro.hometown %></h3>
+        <div><%= intro.content %></div>
+        <div>投稿者：<b><%= intro.name %></b> |
+          <%= link_to '編集', edit_intro_path(intro) %> |
+          <%= link_to '削除', intro, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </div>
+      </div>
+    <% end %>
+<br>
+<%= paginate @intros %><br>
+<%= link_to 'New Intro', new_intro_path %>
+<%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
