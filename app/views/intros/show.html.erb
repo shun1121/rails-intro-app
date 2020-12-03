@@ -15,5 +15,10 @@
   <%= @intro.content %>
 </p>
 
+<p>
+  <strong>Image:</strong>
+  <%= image_tag @intro.image.to_s, :size =>'220x220' %> 
+</p>
+
 <%= link_to 'Edit', edit_intro_path(@intro) %> |
 <%= link_to 'Back', intros_path %>

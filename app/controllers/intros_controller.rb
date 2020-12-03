@@ -14,7 +14,6 @@ class IntrosController < ApplicationController
 
   # GET /intros/new
   def new
-    @intro = Intro.new
     @intro = Intro.find_or_create_by(:user_id => current_user.id) #user_idがログインユーザーなら
     redirect_to edit_intro_url(@intro)
   end
@@ -46,10 +45,29 @@ class IntrosController < ApplicationController
   # PATCH/PUT /intros/1
   # PATCH/PUT /intros/1.json
   def update
+    @intros = Intro.all
     respond_to do |format|
       if @intro.update(intro_params)
         format.html { redirect_to @intro, notice: 'Intro was successfully updated.' }
         format.json { render :show, status: :ok, location: @intro }
+        json = render_to_string(template: "../views/intros/index.json.jbuilder")
+        #↑はintros_controller.rbから見てindex.json.jbuilderがどこにあるか指定
+        
+        # print("+++++++++++")
+        # print(ENV['AWS_ACCESS_KEY_ID'])
+        # print("+++++++++++")
+        # print(ENV['AWS_SECRET_ACCESS_KEY'])
+
+        #↓は誰がawsのs3を使っているのか設定している。配列。本来はintros_helper.rbにかく。
+        client = Aws::S3::Client.new(
+          access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+          #access_key_id: Rails.application.credentials.aws[:access_key_id],
+          secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+          #secret_access_key: Rails.application.credentials.aws[:secret_access_key],
+          region: 'ap-northeast-1'
+        ) 
+        #↓はbucketでバケット名、keyでタイトル名、bodyであげるファイルの中身を設定している。
+        client.put_object(bucket:"introinfo", key:"data1", body:json)
       else
         format.html { render :edit }
         format.json { render json: @intro.errors, status: :unprocessable_entity }
@@ -66,9 +84,9 @@ class IntrosController < ApplicationController
       redirect_to intros_path#action: :index
     else
       @intro.destroy
-      respond_to do |format|
-        format.html { redirect_to intros_url, notice: 'Intro was successfully destroyed.' }
-        format.json { head :no_content }
+       respond_to do |format|
+         format.html { redirect_to intros_url, notice: 'Intro was successfully destroyed.' }
+         format.json { head :no_content }
       end
     end
   end
@@ -81,6 +99,6 @@ class IntrosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def intro_params
-      params.require(:intro).permit(:name, :hometown, :content)
+      params.require(:intro).permit(:name, :hometown, :content, :image)
     end
 end
