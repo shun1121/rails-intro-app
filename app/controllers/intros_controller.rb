@@ -68,6 +68,19 @@ class IntrosController < ApplicationController
         ) 
         #↓はbucketでバケット名、keyでタイトル名、bodyであげるファイルの中身を設定している。
         client.put_object(bucket:"introinfo", key:"data1", body:json)
+        
+
+        # s3resoruce = Aws::S3::Resource.new(
+        #   access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+        #   #access_key_id: Rails.application.credentials.aws[:access_key_id],
+        #   secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+        #   #secret_access_key: Rails.application.credentials.aws[:secret_access_key],
+        #   region: 'ap-northeast-1'
+        # )
+        # # upload_fileを使って、画像をアップロードする
+
+        # s3resoruce.upload_file(bucket:"introinfo", key:"data1" , )
+
       else
         format.html { render :edit }
         format.json { render json: @intro.errors, status: :unprocessable_entity }

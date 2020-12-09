@@ -1,6 +1,7 @@
 class IntroductionUploader < CarrierWave::Uploader::Base
   if Rails.env.development?
-    storage :file
+    # used to be storage :file
+    storage :fog 
   elsif Rails.env.test?
     storage :file
   else
@@ -8,7 +9,8 @@ class IntroductionUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    "uploads/" #これでuploads/の直下に配置される
+    # "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
   def extension_whitelist
